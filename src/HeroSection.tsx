@@ -1,4 +1,5 @@
 import ApiInputKey from "@/components/ApiInputKey";
+import FileUploader from "@/components/FileUploader";
 
 export default function HeroSection() {
   return (
@@ -14,6 +15,8 @@ export default function HeroSection() {
       </div>
 
       <ApiInputKey />
+
+      <FileUploader accept="audio/mp3,audio/*" />
     </div>
   );
 }

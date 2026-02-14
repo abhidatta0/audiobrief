@@ -2,7 +2,7 @@ import { KeyRound, Info } from "lucide-react";
 
 const ApiInputKey = () => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/50 p-6 mb-6 border border-slate-200">
+    <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/50 p-6 mb-6 border border-slate-200 space-y-2">
       <label className="flex items-center gap-2 font-semibold text-slate-700 mb-3">
         <KeyRound className="text-red-600" />
         AI Provider API Key
@@ -12,6 +12,14 @@ const ApiInputKey = () => {
         <Info />
         Your API key stays in your browser and is never stored on our servers
       </p>
+
+      <div>
+        <input
+          type="text"
+          placeholder="Enter your api key"
+          className="w-full p-5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+        />
+      </div>
     </div>
   );
 };
