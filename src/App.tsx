@@ -1,10 +1,7 @@
-const App = ()=> {
+import AppHeader from "@/components/AppHeader";
 
-  return (
-    <div className="text-3xl font-bold underline">
-      Hello App
-    </div>
-  )
-}
+const App = () => {
+  return <AppHeader />;
+};
 
 export default App;
