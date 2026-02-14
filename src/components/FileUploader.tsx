@@ -2,12 +2,13 @@ import { useRef, useState } from "react";
 
 interface Props {
   accept?: string;
+  validateFile?: (file: File) => string | null;
 }
 
-const isAudioFile = (file: File) => {
+export const isAudioFile = (file: File) => {
   return file.type.toLowerCase().startsWith("audio");
 };
-const FileUploader = ({ accept }: Props) => {
+const FileUploader = ({ accept, validateFile }: Props) => {
   const uploadRef = useRef<HTMLInputElement>(null);
 
   const [file, setFile] = useState<File | null>(null);
@@ -17,10 +18,20 @@ const FileUploader = ({ accept }: Props) => {
     if (uploadRef.current) {
       uploadRef.current.value = "";
     }
-    if (!file || !isAudioFile(file)) {
+    processFile(file);
+  };
+
+  const processFile = (selectedFile: File | undefined) => {
+    if (!selectedFile) return;
+
+    const validationError = validateFile?.(selectedFile);
+    console.log({ validationError });
+    if (validationError) {
+      // TODO: Show toast here
       return;
     }
-    setFile(file);
+
+    setFile(selectedFile);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -32,11 +43,8 @@ const FileUploader = ({ accept }: Props) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     console.log({ file });
-    if (!isAudioFile(file)) {
-      return;
-    }
-    setFile(file);
     setIsDragOver(false);
+    processFile(file);
   };
 
   return (
