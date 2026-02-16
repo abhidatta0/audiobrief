@@ -3,12 +3,13 @@ import { useRef, useState } from "react";
 interface Props {
   accept?: string;
   validateFile?: (file: File) => string | null;
+  syncFile: (file: File) => void;
 }
 
 export const isAudioFile = (file: File) => {
   return file.type.toLowerCase().startsWith("audio");
 };
-const FileUploader = ({ accept, validateFile }: Props) => {
+const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
   const uploadRef = useRef<HTMLInputElement>(null);
 
   const [file, setFile] = useState<File | null>(null);
@@ -32,6 +33,7 @@ const FileUploader = ({ accept, validateFile }: Props) => {
     }
 
     setFile(selectedFile);
+    syncFile(selectedFile);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -49,7 +51,7 @@ const FileUploader = ({ accept, validateFile }: Props) => {
 
   return (
     <div
-      className={`w-full flex justify-center items-center overflow-hidden bg-slate-500 cursor-pointer min-h-75 rounded-lg ${isDragOver ? "opacity-50" : "opacity-100"}`}
+      className={`w-full flex justify-center items-center overflow-hidden bg-slate-500 cursor-pointer min-h-50 rounded-lg ${isDragOver ? "opacity-50" : "opacity-100"}`}
       onClick={() => uploadRef.current?.click()}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -62,9 +64,7 @@ const FileUploader = ({ accept, validateFile }: Props) => {
         accept={accept}
         onChange={handleChange}
       />
-      <h2 className="text-white">Upload</h2>
-
-      {file && <p>{file.name}</p>}
+      {file ? <p>{file.name}</p> : <h2 className="text-white">Upload</h2>}
     </div>
   );
 };
