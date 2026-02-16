@@ -1,4 +1,5 @@
 import { OpenRouter } from "@openrouter/sdk";
+import { ChatResponse } from "@openrouter/sdk/models";
 
 const audioToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -17,7 +18,7 @@ const audioToBase64 = (file: File): Promise<string> => {
 export const generateYouTubeContent = async (
   audioFile: File,
   apiKey: string,
-  onChunk: (content: string) => void,
+  onOutput: (content: ChatResponse) => void,
 ) => {
   const openRouterInstance = getOpenRouterInstance(apiKey);
   try {
@@ -53,35 +54,102 @@ export const generateYouTubeContent = async (
       const content = chunk.choices[0]?.delta?.content;
       if (content) {
         audioTranscribed += content;
-        onChunk(audioTranscribed); // Update UI with accumulated content
       }
     }
     console.log(audioTranscribed);
 
-    //    const prompt = createAudioAnalysisPrompt();
+    const prompt = createAudioAnalysisPrompt();
+    const result = await openRouterInstance.chat.send({
+      chatGenerationParams: {
+        model: "openai/gpt-5-image",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: prompt,
+              },
+              {
+                type: "text",
+                text: audioTranscribed,
+              },
+            ],
+          },
+        ],
+        // stream: true,
+        modalities: ["image", "text"],
+        responseFormat: {
+          type: "json_schema",
+          jsonSchema: {
+            strict: true,
+            name: "output",
+
+            schema: {
+              type: "object",
+              properties: {
+                titles: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    additionalProperties: false,
+                  },
+                },
+                images: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    additionalProperties: false,
+                  },
+                },
+              },
+              required: ["titles", "images"],
+            },
+          },
+        },
+      },
+    });
+
+    console.log({ result });
+
+    onOutput(result);
   } catch (error) {
     console.error("OpenRouter API Error:", error);
   }
 };
 
-// const createAudioAnalysisPrompt = ()=>{
-//    return `Please analyse this text and analyze its content. Based on what you hear:
+const createAudioAnalysisPrompt = () => {
+  return `Please analyze this text and its content. Based on that, generate a JSON response with:
 
-//     1. Generate 3 engaging, SEO-optimized YouTube video titles
-//     - Make them attention-grabbing and clickable
-//     - Include relevant keywords based on the actual content
-//     - Keep them under 70 characters when possible
-//     - Reflect the tone and topic of the audio
+1. Generate 3 engaging, SEO-optimized YouTube video titles
+   - Make them attention-grabbing and clickable
+   - Include relevant keywords based on the actual content
+   - Keep them under 70 characters when possible
+   - Reflect the tone and topic of the content
 
-//     2. Generate 5 thumbnail screenshots
-//     - Provide the approximate timestamp for each moment (in seconds)
-//     - Describe what's happening at each thumbnail
-//     - Generate thumbnail
-//     - Consider moments with: topic changes, exciting revelations, key takeaways, emotional peaks, or visual descriptions
+2. Generate 3 custom thumbnail images
+   - Analyze the content to determine 3 distinct visual concepts that would make compelling YouTube thumbnails
+   - For each concept, create/generate an actual image using image generation capabilities
+   - Design thumbnails with bold text overlays, high contrast, and eye-catching visuals
+   - Make them click-worthy and accurately represent the content
+   - Return the actual generated image URLs
 
-//     3. Identify the content type and target audience
-//     }`;
-// }
+Return the response in this exact JSON structure:
+{
+  "titles": [
+    "Title 1",
+    "Title 2", 
+    "Title 3"
+  ],
+  "images": [
+    "base64_image",
+    "base64_image", 
+    "base64_image"
+  ],
+}
+
+CRITICAL: Generate original thumbnail images, do not search for existing images. Each thumbnail should be a custom-created image optimized for YouTube.`;
+};
 
 const getOpenRouterInstance = (apiKey: string) => {
   const openRouter = new OpenRouter({
