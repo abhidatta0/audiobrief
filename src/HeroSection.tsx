@@ -2,10 +2,14 @@ import ApiInputKey from "@/components/ApiInputKey";
 import FileUploader, { isAudioFile } from "@/components/FileUploader";
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
+import { generateYouTubeContent } from "@/services/OpenRouterAudio";
 
 export default function HeroSection() {
   const [apiKey, setApiKey] = useState("");
   const [file, setFile] = useState<File | null>(null);
+
+  const [generatedContent, setGeneratedContent] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const validateFile = (file: File): string | null => {
     if (!isAudioFile(file)) {
@@ -13,6 +17,23 @@ export default function HeroSection() {
     }
 
     return null;
+  };
+
+  const generateContent = async () => {
+    if (!file || !apiKey) {
+      return;
+    }
+    setIsGenerating(true);
+    setGeneratedContent("");
+    try {
+      await generateYouTubeContent(file, apiKey, (content) =>
+        setGeneratedContent(content),
+      );
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsGenerating(false);
+    }
   };
   return (
     <div className="min-h-full bg-linear-to-br from-slate-50 to-slate-100 py-12 px-6">
@@ -34,8 +55,12 @@ export default function HeroSection() {
         syncFile={setFile}
       />
 
+      {JSON.stringify({ generatedContent, isGenerating }, null, 2)}
+
+      <br />
       <button
-        disabled={!file || !apiKey}
+        disabled={!file || !apiKey || isGenerating}
+        onClick={generateContent}
         className="group mt-6 relative inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold text-white  bg-red-600 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-red-500/50 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md disabled:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:transform-none"
       >
         <Sparkles className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />

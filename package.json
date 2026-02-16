@@ -13,6 +13,7 @@
     "format": "npx prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@openrouter/sdk": "^0.8.0",
     "@types/node": "^20.12.12",
     "lucide-react": "^0.564.0",
     "react": "^19.2.3",
