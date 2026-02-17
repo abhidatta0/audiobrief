@@ -66,7 +66,7 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
 
   return (
     <div
-      className={`w-full flex justify-center items-center overflow-hidden bg-slate-500 cursor-pointer min-h-50 rounded-lg ${isDragOver ? "opacity-50" : "opacity-100"}`}
+      className={`w-full flex justify-center items-center overflow-hidden bg-linear-to-br from-white to-red-600  cursor-pointer min-h-50 rounded-lg ${isDragOver ? "opacity-50" : "opacity-100"}`}
       onClick={() => (file ? null : uploadRef.current?.click())}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -126,12 +126,12 @@ const FileVisualizer = ({ file }: { file: File }) => {
             return (
               <div className="space-y-3">
                 <div className="space-y-1">
-                  <div className="w-full">
+                  <div className="w-full space-y-3">
                     <div className="flex items-center gap-4">
-                      <div className="flex flex-col text-white">
-                        <span className="capitalize">
+                      <div className="flex flex-col text-slate-700">
+                        <span className="font-bold">
                           {/* @ts-expect-error error can happen if out of bounds value for trackIndex */}
-                          {playlist[trackIndex].name.split(/-/).join(" ")}
+                          {playlist[trackIndex].name}
                         </span>
                         <span>{formatTime(currentTime)}</span>
                       </div>
@@ -143,7 +143,7 @@ const FileVisualizer = ({ file }: { file: File }) => {
                         title="Rewind"
                         onClick={rewindTrack.bind(null, 0.5)}
                       >
-                        <Rewind />
+                        <Rewind size={24} />
                       </button>
 
                       <button type="button" onClick={togglePlay}>
@@ -166,7 +166,7 @@ const FileVisualizer = ({ file }: { file: File }) => {
                     min="0"
                     step={0.01}
                     max={safeDuration}
-                    className="block w-full min-w-0 accent-red-500"
+                    className="block w-full min-w-0 accent-white"
                     value={safeCurrentTime}
                     disabled={loading || duration === 0}
                     onChange={(e) => setCurrentTime(+e.currentTarget.value)}
@@ -181,7 +181,7 @@ const FileVisualizer = ({ file }: { file: File }) => {
                       type="range"
                       min="0"
                       max="100"
-                      className="w-full md:w-[150px]"
+                      className="w-full md:w-[150px] accent-pink-300  bg-transparent cursor-pointer"
                       value={volume}
                       onChange={(e) => setVolume(+e.currentTarget.value)}
                     />

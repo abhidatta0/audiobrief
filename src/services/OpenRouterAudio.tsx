@@ -165,7 +165,7 @@ const createAudioAnalysisPrompt = () => {
 
 3. Generate 3 descriptions explaining about the video
    - Reflect the tone and topic of the content
-   - Keep them under 150 characters when possible
+   - Keep them atleast 150 characters when possible
 
 Return the response in this exact JSON structure:
 {
