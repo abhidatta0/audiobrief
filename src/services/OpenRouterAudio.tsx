@@ -95,6 +95,13 @@ export const generateYouTubeContent = async (
                     additionalProperties: false,
                   },
                 },
+                descriptions: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    additionalProperties: false,
+                  },
+                },
                 images: {
                   type: "array",
                   items: {
@@ -103,7 +110,7 @@ export const generateYouTubeContent = async (
                   },
                 },
               },
-              required: ["titles", "images"],
+              required: ["titles", "images", "descriptions"],
             },
           },
         },
@@ -127,28 +134,59 @@ const createAudioAnalysisPrompt = () => {
    - Keep them under 70 characters when possible
    - Reflect the tone and topic of the content
 
-2. Generate 3 custom thumbnail images
-   - Analyze the content to determine 3 distinct visual concepts that would make compelling YouTube thumbnails
-   - For each concept, create/generate an actual image using image generation capabilities
-   - Design thumbnails with bold text overlays, high contrast, and eye-catching visuals
-   - Make them click-worthy and accurately represent the content
-   - Return the actual generated image URLs
+2. Generate 3 custom thumbnail images following STRICT YouTube guidelines:
+
+   CANVAS & COMPOSITION RULES (NON-NEGOTIABLE):
+   - Image size: exactly 1280x720 pixels (16:9 aspect ratio), under 2MB
+   - Safe zone: Keep ALL text, faces, logos, and key visuals within a 1180x620 inner frame (50px margin on all sides). Nothing important should appear outside this boundary.
+   - Background must bleed to all 4 edges — but NO text, NO faces, and NO focal elements near the edges
+   - Design as if the thumbnail will be cropped by 5% on each side on some devices
+
+   TEXT RULES:
+   - Use MAX 5–7 words of large, bold text
+   - Font size must be large enough to read on a 320px wide mobile screen
+   - Text must have strong contrast: use drop shadows, outlines, or a semi-transparent backing behind all text
+   - Never place text at the very top or bottom 60px of the image
+   - Avoid the bottom-left corner (YouTube timestamp badge covers it)
+   - No text near left/right edges — give at least 60px horizontal padding
+
+   VISUAL DESIGN:
+   - High contrast between foreground and background (WCAG AA minimum)
+   - Use a maximum of 3 colors for a clean, bold look
+   - Faces or subjects should be centered or placed in the right 60% of the frame
+   - Avoid placing key subjects in corners
+   - Use dramatic lighting, bold shapes, and clear focal points
+   - Avoid small details that won't be visible at thumbnail size
+
+   STYLE:
+   - Analyze content to determine 3 visually distinct concepts
+   - Each thumbnail must look different from the others
+   - Return the generated images in base64 format
+
+3. Generate 3 descriptions explaining about the video
+   - Reflect the tone and topic of the content
+   - Keep them under 150 characters when possible
 
 Return the response in this exact JSON structure:
 {
   "titles": [
     "Title 1",
-    "Title 2", 
+    "Title 2",
     "Title 3"
+  ],
+  "descriptions": [
+    "string",
+    "string",
+    "string"
   ],
   "images": [
     "base64_image",
-    "base64_image", 
+    "base64_image",
     "base64_image"
-  ],
+  ]
 }
 
-CRITICAL: Generate original thumbnail images, do not search for existing images. Each thumbnail should be a custom-created image optimized for YouTube.`;
+CRITICAL: Generate original thumbnail images, do not search for existing images. Each thumbnail should be a custom-created image fully optimized for YouTube — safe zones respected, all text visible, no clipping.`;
 };
 
 const getOpenRouterInstance = (apiKey: string) => {

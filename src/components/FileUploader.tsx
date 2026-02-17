@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { TriangleAlert } from "lucide-react";
 
 interface Props {
   accept?: string;
@@ -14,6 +15,8 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
 
   const [file, setFile] = useState<File | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (uploadRef.current) {
@@ -23,12 +26,16 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
   };
 
   const processFile = (selectedFile: File | undefined) => {
+    setError(null);
+    setFile(null);
+
     if (!selectedFile) return;
 
     const validationError = validateFile?.(selectedFile);
     console.log({ validationError });
     if (validationError) {
       // TODO: Show toast here
+      setError(validationError);
       return;
     }
 
@@ -64,7 +71,17 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
         accept={accept}
         onChange={handleChange}
       />
-      {file ? <p>{file.name}</p> : <h2 className="text-white">Upload</h2>}
+      <div className="flex-col justify-center items-center space-y-2">
+        <h2 className="text-white font-bold text-center">
+          {file ? file.name : "Upload"}
+        </h2>
+        {error && (
+          <p className="text-white flex items-center gap-3">
+            <TriangleAlert className="text-red-800" />
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
