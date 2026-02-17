@@ -16,6 +16,7 @@
     "@openrouter/sdk": "^0.8.0",
     "@types/node": "^20.12.12",
     "lucide-react": "^0.564.0",
+    "motion": "^12.34.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
