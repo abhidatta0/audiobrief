@@ -3,13 +3,7 @@ import FileUploader, { isAudioFile } from "@/components/FileUploader";
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { generateYouTubeContent } from "@/services/OpenRouterAudio";
-import GeneratedOutput from "@/GeneratedOutput";
-
-interface GeneratedResponse {
-  images: string[];
-  titles: string[];
-  descriptions: string[];
-}
+import GeneratedOutput, { GeneratedResponse } from "@/GeneratedOutput";
 
 const getInitialGeneratedResponse = () => ({
   images: [],

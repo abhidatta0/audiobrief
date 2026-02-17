@@ -2,9 +2,10 @@ import { useState } from "react";
 import { motion, stagger } from "motion/react";
 import { Copy, Check, Download } from "lucide-react";
 
-interface GeneratedResponse {
+export interface GeneratedResponse {
   images: string[];
   titles: string[];
+  descriptions: string[];
 }
 
 interface GeneratedOutputProps {
@@ -52,6 +53,8 @@ const GeneratedOutput = ({ data }: GeneratedOutputProps) => {
         <Titles titles={data.titles} />
 
         <Thumbnails images={data.images} />
+
+        <Descriptions descriptions={data.descriptions} />
       </div>
     </div>
   );
@@ -181,6 +184,64 @@ const Thumbnails = ({ images }: ThumbnailListProps) => {
           </motion.div>
         ))}
       </div>
+    </motion.div>
+  );
+};
+
+interface DescriptionListProps {
+  descriptions: string[];
+}
+const Descriptions = ({ descriptions }: DescriptionListProps) => {
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const handleCopy = async (text: string, index: number): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), COPY_FEEDBACK_DURATION);
+    } catch (error) {
+      console.error("Failed to copy text:", error);
+    }
+  };
+  return (
+    <motion.div
+      variants={ANIMATION_VARIANTS.container}
+      initial="hidden"
+      animate="show"
+      className="space-y-4"
+    >
+      <motion.h2
+        variants={ANIMATION_VARIANTS.itemVariant}
+        className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-6"
+      >
+        Descriptions
+      </motion.h2>
+
+      {descriptions.map((title, index) => (
+        <motion.div
+          key={index}
+          variants={ANIMATION_VARIANTS.itemVariant}
+          className="group relative bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <p className="text-gray-800 flex-1 leading-relaxed">{title}</p>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleCopy(title, index)}
+              className="shrink-0 p-2 rounded-md hover:bg-white transition-colors"
+              aria-label="Copy title"
+            >
+              {copiedIndex === index ? (
+                <Check className="w-4 h-4 text-green-600" />
+              ) : (
+                <Copy className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+              )}
+            </motion.button>
+          </div>
+        </motion.div>
+      ))}
     </motion.div>
   );
 };
