@@ -1,5 +1,5 @@
+import { GeneratedResponse } from "@/GeneratedOutput";
 import { OpenRouter } from "@openrouter/sdk";
-import { ChatResponse } from "@openrouter/sdk/models";
 
 const audioToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -18,7 +18,7 @@ const audioToBase64 = (file: File): Promise<string> => {
 export const generateYouTubeContent = async (
   audioFile: File,
   apiKey: string,
-  onOutput: (content: ChatResponse) => void,
+  onOutput: (content: GeneratedResponse) => void,
 ) => {
   const openRouterInstance = getOpenRouterInstance(apiKey);
   try {
@@ -58,66 +58,17 @@ export const generateYouTubeContent = async (
     }
     console.log(audioTranscribed);
 
-    const prompt = createAudioAnalysisPrompt();
-    const result = await openRouterInstance.chat.send({
-      chatGenerationParams: {
-        model: "openai/gpt-5-image",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: prompt,
-              },
-              {
-                type: "text",
-                text: audioTranscribed,
-              },
-            ],
-          },
-        ],
-        // stream: true,
-        modalities: ["image", "text"],
-        responseFormat: {
-          type: "json_schema",
-          jsonSchema: {
-            strict: true,
-            name: "output",
+    const [textContent, image1, image2, image3] = await Promise.all([
+      generateTextContent(audioTranscribed, openRouterInstance),
+      generateSingleThumbnail(audioTranscribed, openRouterInstance),
+      generateSingleThumbnail(audioTranscribed, openRouterInstance),
+      generateSingleThumbnail(audioTranscribed, openRouterInstance),
+    ]);
 
-            schema: {
-              type: "object",
-              properties: {
-                titles: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                    additionalProperties: false,
-                  },
-                },
-                descriptions: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                    additionalProperties: false,
-                  },
-                },
-                images: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                    additionalProperties: false,
-                  },
-                },
-              },
-              required: ["titles", "images", "descriptions"],
-            },
-          },
-        },
-      },
-    });
-
-    console.log({ result });
+    const result = {
+      ...textContent,
+      images: [image1, image2, image3],
+    };
 
     onOutput(result);
   } catch (error) {
@@ -125,7 +76,89 @@ export const generateYouTubeContent = async (
   }
 };
 
-const createAudioAnalysisPrompt = () => {
+const generateSingleThumbnail = async (
+  transcription: string,
+  openRouterInstance: ReturnType<typeof getOpenRouterInstance>,
+) => {
+  const prompt = createSingleImagePrompt();
+
+  const result = await openRouterInstance.chat.send({
+    chatGenerationParams: {
+      model: "openai/gpt-5-image-mini",
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: prompt },
+            { type: "text", text: transcription },
+          ],
+        },
+      ],
+      stream: false,
+      modalities: ["image", "text"],
+    },
+  });
+
+  let image = "";
+  if (result.choices[0].message.images?.[0]) {
+    image = result.choices[0].message.images[0].imageUrl.url;
+  }
+  return image;
+};
+
+const generateTextContent = async (
+  transcription: string,
+  openRouterInstance: ReturnType<typeof getOpenRouterInstance>,
+): Promise<{ titles: string[]; descriptions: string[] }> => {
+  const prompt = createTextPrompt();
+
+  let fullResponse = "";
+  const stream = await openRouterInstance.chat.send({
+    chatGenerationParams: {
+      model: "google/gemini-3-flash-preview",
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: prompt },
+            { type: "text", text: transcription },
+          ],
+        },
+      ],
+      stream: true,
+      responseFormat: {
+        type: "json_schema",
+        jsonSchema: {
+          strict: true,
+          name: "text_output",
+          schema: {
+            type: "object",
+            properties: {
+              titles: {
+                type: "array",
+                items: { type: "string", additionalProperties: false },
+              },
+              descriptions: {
+                type: "array",
+                items: { type: "string", additionalProperties: false },
+              },
+            },
+            required: ["titles", "descriptions"],
+          },
+        },
+      },
+    },
+  });
+
+  for await (const chunk of stream) {
+    const content = chunk.choices[0]?.delta?.content;
+    if (content) fullResponse += content;
+  }
+
+  return JSON.parse(fullResponse);
+};
+
+const createTextPrompt = () => {
   return `Please analyze this text and its content. Based on that, generate a JSON response with:
 
 1. Generate 3 engaging, SEO-optimized YouTube video titles
@@ -134,36 +167,7 @@ const createAudioAnalysisPrompt = () => {
    - Keep them under 70 characters when possible
    - Reflect the tone and topic of the content
 
-2. Generate 3 custom thumbnail images following STRICT YouTube guidelines:
-
-   CANVAS & COMPOSITION RULES (NON-NEGOTIABLE):
-   - Image size: exactly 1280x720 pixels (16:9 aspect ratio), under 2MB
-   - Safe zone: Keep ALL text, faces, logos, and key visuals within a 1180x620 inner frame (50px margin on all sides). Nothing important should appear outside this boundary.
-   - Background must bleed to all 4 edges — but NO text, NO faces, and NO focal elements near the edges
-   - Design as if the thumbnail will be cropped by 5% on each side on some devices
-
-   TEXT RULES:
-   - Use MAX 5–7 words of large, bold text
-   - Font size must be large enough to read on a 320px wide mobile screen
-   - Text must have strong contrast: use drop shadows, outlines, or a semi-transparent backing behind all text
-   - Never place text at the very top or bottom 60px of the image
-   - Avoid the bottom-left corner (YouTube timestamp badge covers it)
-   - No text near left/right edges — give at least 60px horizontal padding
-
-   VISUAL DESIGN:
-   - High contrast between foreground and background (WCAG AA minimum)
-   - Use a maximum of 3 colors for a clean, bold look
-   - Faces or subjects should be centered or placed in the right 60% of the frame
-   - Avoid placing key subjects in corners
-   - Use dramatic lighting, bold shapes, and clear focal points
-   - Avoid small details that won't be visible at thumbnail size
-
-   STYLE:
-   - Analyze content to determine 3 visually distinct concepts
-   - Each thumbnail must look different from the others
-   - Return the generated images in base64 format
-
-3. Generate 3 descriptions explaining about the video
+2. Generate 3 descriptions explaining about the video
    - Reflect the tone and topic of the content
    - Keep them atleast 150 characters when possible
 
@@ -179,16 +183,37 @@ Return the response in this exact JSON structure:
     "string",
     "string"
   ],
-  "images": [
-    "base64_image",
-    "base64_image",
-    "base64_image"
-  ]
 }
 
 CRITICAL: Generate original thumbnail images, do not search for existing images. Each thumbnail should be a custom-created image fully optimized for YouTube — safe zones respected, all text visible, no clipping.`;
 };
 
+const createSingleImagePrompt = () => {
+  return `
+  Please analyze this transcribed audio content and generate a single thumbnail.
+
+CANVAS & COMPOSITION RULES (NON-NEGOTIABLE):
+- Image size: exactly 1280x720 pixels (16:9 aspect ratio), under 2MB
+- Safe zone: Keep ALL text, faces, logos within a 1180x620 inner frame (50px margin on all sides)
+- Background must bleed to all 4 edges — no text or focal elements near the edges
+- Design as if the thumbnail will be cropped by 5% on each side on some devices
+
+TEXT RULES:
+- MAX 2-3 words of large, bold text
+- Font size readable on a 320px wide mobile screen
+- Strong contrast: use drop shadows, outlines, or semi-transparent backing behind all text
+- Never place text at the very top or bottom 60px of the image
+- Avoid the bottom-left corner (YouTube timestamp covers it)
+- At least 60px horizontal padding from edges
+
+VISUAL DESIGN:
+- High contrast between foreground and background (WCAG AA minimum)
+- Max 3 colors for a clean, bold look
+- Faces/subjects centered or in the right 60% of the frame
+- Dramatic lighting, bold shapes, clear focal points
+
+CRITICAL: Generate an original custom image. Do not search for existing images.`;
+};
 const getOpenRouterInstance = (apiKey: string) => {
   const openRouter = new OpenRouter({
     apiKey,
