@@ -11,6 +11,9 @@ importers:
       '@openrouter/sdk':
         specifier: ^0.8.0
         version: 0.8.0
+      '@sina_byn/re-audio':
+        specifier: ^2.1.3
+        version: 2.1.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@types/node':
         specifier: ^20.12.12
         version: 20.19.27
@@ -494,6 +497,12 @@ packages:
     resolution: {integrity: sha512-JRpZUhCfhZ4keB5v0fe02gQJy05GqboPOaxvjugW04RLSYYoB/9t2lx2u/tMs/Na/1NXfY8QYjgRljRpN+MjTQ==}
     cpu: [x64]
     os: [win32]
+
+  '@sina_byn/re-audio@2.1.3':
+    resolution: {integrity: sha512-9bx5Euab0xVaZQrGepH/fLF2Arxrt2LZd31mB7cjS6bHQbqfobgQ1ZaLo7otfRLZVoLT+fdpL+f3L8TkOkquiQ==}
+    peerDependencies:
+      react: 19.*
+      react-dom: 19.*
 
   '@tailwindcss/node@4.1.18':
     resolution: {integrity: sha512-DoR7U1P7iYhw16qJ49fgXUlry1t4CpXeErJHnQ44JgTSKMaZUdf17cfn5mHchfJ4KRBZRFA/Coo+MUF5+gOaCQ==}
@@ -2232,6 +2241,11 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.53.5':
     optional: true
+
+  '@sina_byn/re-audio@2.1.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
 
   '@tailwindcss/node@4.1.18':
     dependencies:
