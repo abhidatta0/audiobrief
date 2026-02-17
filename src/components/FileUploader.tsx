@@ -66,7 +66,7 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
 
   return (
     <div
-      className={`w-full flex justify-center items-center overflow-hidden bg-linear-to-br from-white to-red-600  cursor-pointer min-h-50 rounded-lg ${isDragOver ? "opacity-50" : "opacity-100"}`}
+      className={`w-full flex justify-center items-center overflow-hidden cursor-pointer min-h-50 rounded-lg ${isDragOver ? "bg-white border border-red-300" : "opacity-100 bg-linear-to-br from-white to-red-600"}`}
       onClick={() => (file ? null : uploadRef.current?.click())}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -79,13 +79,30 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
         accept={accept}
         onChange={handleChange}
       />
-      <div className=" justify-center items-center space-y-2">
+      <div className=" flex-col justify-center items-center space-y-2">
         {file ? (
           <FileVisualizer file={file} />
         ) : (
-          <h2 className="text-white font-bold text-center">Upload</h2>
+          <div className="text-center space-y-2">
+            {!isDragOver ? (
+              <>
+                <h2 className="text-white font-bold text-center text-3xl">
+                  Drag and drop file
+                </h2>
+                <p>or</p>
+                <button
+                  className="border border-gray-200 py-2 px-6 rounded-lg text-white
+          "
+                >
+                  Select file
+                </button>
+              </>
+            ) : (
+              <h2>Drop here...</h2>
+            )}
+          </div>
         )}
-        {error && (
+        {error && !isDragOver && (
           <p className="text-white flex items-center gap-3">
             <TriangleAlert className="text-red-800" />
             {error}

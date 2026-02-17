@@ -137,7 +137,7 @@ const Thumbnails = ({ images }: ThumbnailListProps) => {
     >
       <motion.h2
         variants={ANIMATION_VARIANTS.itemVariant}
-        className="text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-red-600 border-b-2"
+        className="text-lg font-medium text-gray-700 tracking-wide border-b-red-600 border-b-2"
       >
         Thumbnails
       </motion.h2>

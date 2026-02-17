@@ -15,7 +15,7 @@ const ApiInputKey = ({ onChangeApiKey, apiKey }: Props) => {
       <div className="flex items-center justify-between">
         <label className="flex items-center gap-2 font-semibold text-slate-700">
           <KeyRound className="text-red-600" />
-          AI Provider API Key
+          OpenRouter AI Provider API Key
         </label>
 
         <button
@@ -34,8 +34,16 @@ const ApiInputKey = ({ onChangeApiKey, apiKey }: Props) => {
         <>
           <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
             <Info />
-            Your API key stays in your browser and is never stored on our
-            servers
+            Your Openrouter API key stays in your browser and is never stored on
+            our servers.{" "}
+            <a
+              className="text-blue-300"
+              rel="noreferrer"
+              href="https://openrouter.ai/settings/keys"
+              target="_blank"
+            >
+              Click here for Openrouter API key
+            </a>
           </p>
 
           <div className="flex items-center border border-slate-200 focus:ring-2 focus:ring-blue-500 pl-2 rounded-lg">
