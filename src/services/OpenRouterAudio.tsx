@@ -96,6 +96,9 @@ const generateSingleThumbnail = async (
       ],
       stream: false,
       modalities: ["image", "text"],
+      imageConfig: {
+        aspectRatio: "16:9",
+      },
     },
   });
 
