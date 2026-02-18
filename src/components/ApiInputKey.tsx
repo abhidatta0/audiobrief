@@ -55,7 +55,7 @@ const ApiInputKey = ({ onChangeApiKey, apiKey }: Props) => {
               type={showPassword ? "text" : "password"}
               placeholder="Enter your api key"
               value={apiKey}
-              onChange={(e) => onChangeApiKey(e.target.value)}
+              onChange={(e) => onChangeApiKey(e.target.value.trim())}
               className="w-full p-2 bg-white border-none  focus:outline-none focus:border-transparent transition-all"
             />
           </div>

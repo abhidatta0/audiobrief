@@ -1,5 +1,6 @@
 import { GeneratedResponse } from "@/GeneratedOutput";
 import { OpenRouter } from "@openrouter/sdk";
+import { toast } from "react-fox-toast";
 
 const audioToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -73,6 +74,19 @@ export const generateYouTubeContent = async (
     onOutput(result);
   } catch (error) {
     console.error("OpenRouter API Error:", error);
+    if (error && typeof error === "object" && !Array.isArray(error)) {
+      const err = error as Record<string, unknown>;
+      if (err["error"]) {
+        if (typeof err.error === "object" && !Array.isArray(err.error)) {
+          const errObj = err.error as Record<string, unknown>;
+          if ("code" in errObj) {
+            if (typeof errObj.code === "number" && errObj.code === 401) {
+              toast.error("Api key is invalid");
+            }
+          }
+        }
+      }
+    }
   }
 };
 
