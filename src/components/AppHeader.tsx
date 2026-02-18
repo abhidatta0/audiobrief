@@ -9,7 +9,7 @@ export default function Header() {
     <>
       <header className="relative bg-linear-to-br from-slate-900 to-slate-800 md:px-8 md:py-6 px-4 py-3 overflow-hidden sm:px-6 sm:py-5">
         {showDemoRibbon && (
-          <div className="absolute top-5 right-0 bg-white border-2 border-red-600 rounded-l px-2  flex gap-2">
+          <div className="static mb-2 lg:absolute  z-2 top-5 right-0 bg-white border-2 border-red-600 rounded-l px-2  flex gap-2 justify-between">
             <button onClick={() => setShowDemoModal(true)}>Show demo</button>
             <button
               onClick={() => setShowDemoRibbon(false)}

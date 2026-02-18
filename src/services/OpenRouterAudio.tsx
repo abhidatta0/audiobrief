@@ -57,7 +57,6 @@ export const generateYouTubeContent = async (
         audioTranscribed += content;
       }
     }
-    console.log(audioTranscribed);
 
     const [textContent, image1, image2, image3] = await Promise.all([
       generateTextContent(audioTranscribed, openRouterInstance),

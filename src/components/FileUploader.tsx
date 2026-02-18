@@ -41,7 +41,6 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
     if (!selectedFile) return;
 
     const validationError = validateFile?.(selectedFile);
-    console.log({ validationError });
     if (validationError) {
       setError(validationError);
       return;
@@ -59,7 +58,6 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    console.log({ file });
     setIsDragOver(false);
     processFile(file);
   };

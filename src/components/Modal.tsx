@@ -29,7 +29,9 @@ const Modal = ({ children, isVisible, onClose }: Props) => {
         id="model-content"
         className="bg-gray-200 max-w-[80%] m-auto p-5 relative rounded-lg"
       >
-        <div className="absolute right-5 text-xl cursor-pointer">&times;</div>
+        <div id="close" className="absolute right-2 text-3xl cursor-pointer">
+          &times;
+        </div>
         {children}
       </div>
     </div>
