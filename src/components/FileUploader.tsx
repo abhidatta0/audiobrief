@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { Audio, formatTime } from "@sina_byn/re-audio";
 import {
   Volume,
@@ -66,7 +66,7 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
 
   return (
     <div
-      className={`w-full flex justify-center items-center overflow-hidden cursor-pointer min-h-50 rounded-lg ${isDragOver ? "bg-white border border-red-300" : "opacity-100 bg-linear-to-br from-white to-red-600"}`}
+      className={`w-full flex justify-center items-center overflow-hidden cursor-pointer py-3 rounded-lg ${isDragOver ? "bg-white border border-red-300" : "opacity-100 bg-linear-to-br from-white to-red-600"}`}
       onClick={() => (file ? null : uploadRef.current?.click())}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -81,7 +81,15 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
       />
       <div className=" flex-col justify-center items-center space-y-2">
         {file ? (
-          <FileVisualizer file={file} />
+          <>
+            <FileVisualizer file={file} />
+            <button
+              onClick={() => uploadRef.current?.click()}
+              className="bg-white w-full my-2 rounded transition duration-500 hover:scale-110 "
+            >
+              Change file
+            </button>
+          </>
         ) : (
           <div className="text-center space-y-2">
             {!isDragOver ? (
@@ -220,4 +228,4 @@ const FileVisualizer = ({ file }: { file: File }) => {
   return file.name;
 };
 
-export default FileUploader;
+export default memo(FileUploader);

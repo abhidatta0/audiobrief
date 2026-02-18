@@ -1,6 +1,6 @@
 import ApiInputKey from "@/components/ApiInputKey";
 import FileUploader, { isAudioFile } from "@/components/FileUploader";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { generateYouTubeContent } from "@/services/OpenRouterAudio";
 import GeneratedOutput, { GeneratedResponse } from "@/GeneratedOutput";
@@ -19,13 +19,13 @@ export default function HeroSection() {
   );
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = useCallback((file: File): string | null => {
     if (!isAudioFile(file)) {
       return "Please upload an audio file";
     }
 
     return null;
-  };
+  }, []);
 
   const generateContent = async () => {
     if (!file || !apiKey) {
@@ -71,7 +71,12 @@ export default function HeroSection() {
         <Sparkles className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
         <span>{isGenerating ? "Generating" : "Generate"}</span>
       </button>
-
+      {isGenerating && (
+        <p className="text-center bg-white p-2 rounded-l-lg rounded-r-lg">
+          Generating 3 suggestions each for titles, thumbnails and
+          descriptions.It will take approximately 1 min
+        </p>
+      )}
       {!isGenerating && <GeneratedOutput data={generatedContent} />}
     </div>
   );
