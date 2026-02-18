@@ -1,9 +1,17 @@
+import { useEffect } from "react";
 interface Props {
   children: React.ReactNode;
   onClose: () => void;
   isVisible: boolean;
 }
 const Modal = ({ children, isVisible, onClose }: Props) => {
+  useEffect(() => {
+    if (isVisible) {
+      document.body.classList.add("overflow-y-hidden");
+    } else {
+      document.body.classList.remove("overflow-y-hidden");
+    }
+  }, [isVisible]);
   if (!isVisible) return null;
 
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -15,13 +23,13 @@ const Modal = ({ children, isVisible, onClose }: Props) => {
   return (
     <div
       onClick={handleClose}
-      className="fixed inset-0 pt-[20%] bg-gray-50/70 z-10 "
+      className="fixed inset-0 pt-[5%] bg-gray-50/70 z-10 h-screen overflow-hidden"
     >
       <div
         id="model-content"
         className="bg-gray-200 max-w-[80%] m-auto p-5 relative rounded-lg"
       >
-        <div className="absolute right-5 font-xs cursor-pointer">&times;</div>
+        <div className="absolute right-5 text-xl cursor-pointer">&times;</div>
         {children}
       </div>
     </div>

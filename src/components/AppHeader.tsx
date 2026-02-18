@@ -37,7 +37,13 @@ export default function Header() {
         </div>
       </header>
       <Modal isVisible={showDemoModal} onClose={() => setShowDemoModal(false)}>
-        This is modal content
+        <video
+          controls
+          className="w-full max-h-150"
+          controlsList="nodownload nofullscreen"
+        >
+          <source src="/audiobrief-demo.mp4" type="video/mp4" />
+        </video>
       </Modal>
     </>
   );
