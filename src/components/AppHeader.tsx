@@ -1,6 +1,20 @@
+import { useState } from "react";
+
 export default function Header() {
+  const [showDemoRibbon, setShowDemoRibbon] = useState(true);
   return (
     <header className="relative bg-linear-to-br from-slate-900 to-slate-800 md:px-8 md:py-6 px-4 py-3 overflow-hidden sm:px-6 sm:py-5">
+      {showDemoRibbon && (
+        <div className="absolute top-5 right-0 bg-white rounded-l px-2  flex gap-2">
+          <button>Show demo</button>
+          <button
+            onClick={() => setShowDemoRibbon(false)}
+            className="text-xs text-red-400"
+          >
+            X
+          </button>
+        </div>
+      )}
       <div className="relative z-10 max-w-6xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 sm:w-10 sm:h-10 bg-linear-to-br from-white to-red-600 rounded-xl flex items-center justify-center text-2xl sm:text-xl shadow-lg shadow-blue-500/30 animate-float">
