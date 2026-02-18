@@ -117,7 +117,7 @@ const FileVisualizer = ({ file }: { file: File }) => {
   if (isAudioFile(file)) {
     // AudioPlayer.tsx
     return (
-      <div className="min-w-lg">
+      <div className="">
         <Audio
           playlist={[
             { id: 1, src: URL.createObjectURL(file), name: file.name },
@@ -191,7 +191,7 @@ const FileVisualizer = ({ file }: { file: File }) => {
                 </div>
 
                 <div className="flex items-center justify-between gap-x-4">
-                  <div className="flex items-center gap-x-2 mt-4 text-white">
+                  <div className="flex items-center gap-x-2 mt-4 grow text-white self-center">
                     <Volume />
 
                     <input

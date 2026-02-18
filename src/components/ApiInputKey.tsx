@@ -15,7 +15,7 @@ const ApiInputKey = ({ onChangeApiKey, apiKey }: Props) => {
       <div className="flex items-center justify-between">
         <label className="flex items-center gap-2 font-semibold text-slate-700">
           <KeyRound className="text-red-600" />
-          OpenRouter AI Provider API Key
+          OpenRouter AI API Key
         </label>
 
         <button
