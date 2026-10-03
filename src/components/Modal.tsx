@@ -15,8 +15,8 @@ const Modal = ({ children, isVisible, onClose }: Props) => {
   if (!isVisible) return null;
 
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
-    //@ts-expect-error id might not be present
-    if (e.target.id !== "model-content") {
+    // only close when the backdrop itself is clicked, not its children
+    if (e.target === e.currentTarget) {
       onClose();
     }
   };
@@ -25,13 +25,15 @@ const Modal = ({ children, isVisible, onClose }: Props) => {
       onClick={handleClose}
       className="fixed inset-0 pt-[5%] bg-gray-50/70 z-10 h-screen overflow-hidden"
     >
-      <div
-        id="model-content"
-        className="bg-gray-200 max-w-[80%] m-auto p-5 relative rounded-lg"
-      >
-        <div id="close" className="absolute right-2 text-3xl cursor-pointer">
+      <div className="bg-gray-200 max-w-[80%] m-auto p-5 relative rounded-lg">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-2 top-0 text-3xl cursor-pointer"
+        >
           &times;
-        </div>
+        </button>
         {children}
       </div>
     </div>
