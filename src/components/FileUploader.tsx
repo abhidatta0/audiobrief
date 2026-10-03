@@ -64,7 +64,7 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
 
   return (
     <div
-      className={`w-full flex justify-center items-center overflow-hidden cursor-pointer py-3 rounded-lg ${isDragOver ? "bg-white border border-red-300" : "opacity-100 bg-linear-to-br from-white to-red-600"}`}
+      className={`w-full flex justify-center items-center overflow-hidden cursor-pointer py-3 rounded-lg ${isDragOver ? "bg-white border border-brand-300" : "opacity-100 bg-linear-to-br from-white to-brand-600"}`}
       onClick={() => (file ? null : uploadRef.current?.click())}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -110,7 +110,7 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
         )}
         {error && !isDragOver && (
           <p className="text-white flex items-center gap-3">
-            <TriangleAlert className="text-red-800" />
+            <TriangleAlert className="text-brand-800" />
             {error}
           </p>
         )}

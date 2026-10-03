@@ -49,7 +49,7 @@ const handleDownload = (imageUrl: string, index: number) => {
 const GeneratedOutput = ({ data }: GeneratedOutputProps) => {
   return (
     <div className=" bg-white p-8 mt-2">
-      <span className="text-xl font-semibold text-red-400 uppercase tracking-widest">
+      <span className="text-xl font-semibold text-brand-400 uppercase tracking-widest">
         Generated Results
       </span>
       <div className="mx-auto space-y-12 mt-3">
@@ -89,7 +89,7 @@ const Titles = ({ titles }: TitlesListProps) => {
     >
       <motion.h2
         variants={ANIMATION_VARIANTS.itemVariant}
-        className="text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-red-600 border-b-2"
+        className="text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-brand-600 border-b-2"
       >
         Titles
       </motion.h2>
@@ -137,7 +137,7 @@ const Thumbnails = ({ images }: ThumbnailListProps) => {
     >
       <motion.h2
         variants={ANIMATION_VARIANTS.itemVariant}
-        className="text-lg font-medium text-gray-700 tracking-wide border-b-red-600 border-b-2"
+        className="text-lg font-medium text-gray-700 tracking-wide border-b-brand-600 border-b-2"
       >
         Thumbnails
       </motion.h2>
@@ -215,7 +215,7 @@ const Descriptions = ({ descriptions }: DescriptionListProps) => {
     >
       <motion.h2
         variants={ANIMATION_VARIANTS.itemVariant}
-        className="text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-red-600 border-b-2"
+        className="text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-brand-600 border-b-2"
       >
         Descriptions
       </motion.h2>

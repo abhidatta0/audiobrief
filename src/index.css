@@ -4,7 +4,19 @@ layer(base);
 
 @theme {
   --font-*: initial;
-  --font-sans: Kanit, Arial, sans-serif;
+  --font-sans: Syne, Arial, sans-serif;
+
+  --color-brand-50: var(--color-red-50);
+  --color-brand-100: var(--color-red-100);
+  --color-brand-200: var(--color-red-200);
+  --color-brand-300: var(--color-red-300);
+  --color-brand-400: var(--color-red-400);
+  --color-brand-500: var(--color-red-500);
+  --color-brand-600: var(--color-red-600);
+  --color-brand-700: var(--color-red-700);
+  --color-brand-800: var(--color-red-800);
+  --color-brand-900: var(--color-red-900);
+  --color-brand-950: var(--color-red-950);
 }
 
 /*
