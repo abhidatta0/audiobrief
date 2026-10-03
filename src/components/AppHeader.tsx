@@ -9,13 +9,28 @@ export default function Header() {
     <>
       <header className="relative bg-linear-to-br from-slate-900 to-slate-800 md:px-8 md:py-6 px-4 py-3 overflow-hidden sm:px-6 sm:py-5">
         {showDemoRibbon && (
-          <div className="static mb-2 lg:absolute  z-2 top-5 right-0 bg-white border-2 border-brand-600 rounded-l px-2  flex gap-2 justify-between">
-            <button onClick={() => setShowDemoModal(true)}>Show demo</button>
+          <div className="mb-3 flex w-fit items-center gap-1 rounded-full border border-brand-600/40 bg-white/95 py-1 pl-1 pr-1.5 shadow-lg shadow-brand-600/20 backdrop-blur lg:absolute lg:top-5 lg:right-0 lg:mb-0 lg:rounded-r-none lg:border-r-0 lg:pr-3">
+            <button
+              onClick={() => setShowDemoModal(true)}
+              className="group flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold text-slate-800 transition-colors hover:bg-brand-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-colors group-hover:bg-white group-hover:text-brand-600">
+                <svg
+                  viewBox="0 0 10 12"
+                  aria-hidden="true"
+                  className="ml-0.5 h-2.5 w-2.5 fill-current"
+                >
+                  <path d="M0 0 L10 6 L0 12 Z" />
+                </svg>
+              </span>
+              Show demo
+            </button>
             <button
               onClick={() => setShowDemoRibbon(false)}
-              className="text-xs text-brand-400"
+              aria-label="Dismiss demo banner"
+              className="flex h-6 w-6 items-center justify-center rounded-full text-sm leading-none text-slate-400 transition-colors hover:bg-slate-100 hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-brand-600"
             >
-              X
+              ✕
             </button>
           </div>
         )}
