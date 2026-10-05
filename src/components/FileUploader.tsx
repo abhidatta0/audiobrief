@@ -83,7 +83,7 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
             <FileVisualizer file={file} />
             <button
               onClick={() => uploadRef.current?.click()}
-              className="bg-white w-full my-2 rounded transition duration-500 hover:scale-110 "
+              className="bg-white w-full my-2 py-2 rounded-lg font-semibold text-brand-600 shadow-sm transition hover:bg-brand-50"
             >
               Change file
             </button>
@@ -147,7 +147,7 @@ const FileVisualizer = ({ file }: { file: File }) => {
             const safeCurrentTime = Math.min(currentTime, safeDuration);
 
             return (
-              <div className="space-y-3">
+              <div className="space-y-3 rounded-xl bg-white/80 p-4 shadow-md backdrop-blur">
                 <div className="space-y-1">
                   <div className="w-full space-y-3">
                     <div className="flex items-center gap-4">
@@ -156,11 +156,13 @@ const FileVisualizer = ({ file }: { file: File }) => {
                           {/* @ts-expect-error error can happen if out of bounds value for trackIndex */}
                           {playlist[trackIndex].name}
                         </span>
-                        <span>{formatTime(currentTime)}</span>
+                        <span className="text-sm text-slate-500">
+                          {formatTime(currentTime)} / {formatTime(safeDuration)}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center max-md:justify-center gap-x-4 text-white">
+                    <div className="flex items-center justify-center gap-x-4 text-brand-600">
                       <button
                         type="button"
                         title="Rewind"
@@ -189,7 +191,7 @@ const FileVisualizer = ({ file }: { file: File }) => {
                     min="0"
                     step={0.01}
                     max={safeDuration}
-                    className="block w-full min-w-0 accent-white"
+                    className="block w-full min-w-0 accent-brand-500"
                     value={safeCurrentTime}
                     disabled={loading || duration === 0}
                     onChange={(e) => setCurrentTime(+e.currentTarget.value)}
@@ -197,14 +199,14 @@ const FileVisualizer = ({ file }: { file: File }) => {
                 </div>
 
                 <div className="flex items-center justify-between gap-x-4">
-                  <div className="flex items-center gap-x-2 mt-4 grow text-white self-center">
+                  <div className="flex items-center gap-x-2 grow text-slate-500 self-center">
                     <Volume />
 
                     <input
                       type="range"
                       min="0"
                       max="100"
-                      className="w-full md:w-[150px] accent-pink-300  bg-transparent cursor-pointer"
+                      className="w-full md:w-[150px] accent-brand-500 bg-transparent cursor-pointer"
                       value={volume}
                       onChange={(e) => setVolume(+e.currentTarget.value)}
                     />
