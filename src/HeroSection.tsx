@@ -58,7 +58,7 @@ export default function HeroSection() {
       <ApiInputKey onChangeApiKey={setApiKey} apiKey={apiKey} />
 
       <FileUploader
-        accept="audio/mp3,audio/*"
+        accept=".mp3,audio/mpeg"
         validateFile={validateFile}
         syncFile={setFile}
       />
