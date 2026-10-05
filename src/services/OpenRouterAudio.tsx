@@ -84,6 +84,15 @@ export const generateYouTubeContent = async (
             }
           }
         }
+      } else if (err["body"]) {
+        if (typeof err.body === "string") {
+          try {
+            const errJson = JSON.parse(err.body);
+            toast.error(errJson?.error?.message ?? "Something went wrong");
+          } catch {
+            console.error(err);
+          }
+        }
       }
     }
   }
