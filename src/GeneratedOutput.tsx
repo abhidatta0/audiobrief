@@ -154,25 +154,20 @@ const Thumbnails = ({ images }: ThumbnailListProps) => {
               <img
                 src={image}
                 alt={`Thumbnail ${index + 1}`}
-                className="w-full h-full object-fill"
+                className="w-full h-full object-cover"
               />
 
-              {/* Hover Overlay */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                className="absolute inset-0 bg-black/50 flex items-center justify-center"
-              >
+              <div className="absolute inset-0 flex items-center justify-center transition-opacity md:bg-black/50 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleDownload(image, index)}
-                  className="bg-white rounded-full p-3 shadow-lg"
+                  className="bg-white rounded-full p-3 shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
                   aria-label="Download thumbnail"
                 >
                   <Download className="w-5 h-5 text-gray-800" />
                 </motion.button>
-              </motion.div>
+              </div>
             </div>
 
             {/* Dimensions */}
