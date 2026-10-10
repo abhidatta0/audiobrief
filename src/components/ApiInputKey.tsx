@@ -32,12 +32,12 @@ const ApiInputKey = ({ onChangeApiKey, apiKey }: Props) => {
 
       {!collapsed && (
         <>
-          <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
-            <Info />
+          <p className="text-xs text-slate-500 mt-2 flex items-start gap-1.5">
+            <Info className="w-4 h-4 shrink-0 mt-px" />
             Your Openrouter API key stays in your browser and is never stored on
             our servers.{" "}
             <a
-              className="text-blue-300"
+              className="font-medium text-blue-600 underline underline-offset-2"
               rel="noreferrer"
               href="https://openrouter.ai/settings/keys"
               target="_blank"

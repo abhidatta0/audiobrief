@@ -77,7 +77,7 @@ const FileUploader = ({ accept, validateFile, syncFile }: Props) => {
         accept={accept}
         onChange={handleChange}
       />
-      <div className=" flex-col justify-center items-center space-y-2">
+      <div className="w-full max-w-xl min-w-0 px-3 flex-col justify-center items-center space-y-2">
         {file ? (
           <>
             <FileVisualizer file={file} />
@@ -151,8 +151,8 @@ const FileVisualizer = ({ file }: { file: File }) => {
                 <div className="space-y-1">
                   <div className="w-full space-y-3">
                     <div className="flex items-center gap-4">
-                      <div className="flex flex-col text-slate-700">
-                        <span className="font-bold">
+                      <div className="flex flex-col min-w-0 text-slate-700">
+                        <span className="font-bold truncate">
                           {/* @ts-expect-error error can happen if out of bounds value for trackIndex */}
                           {playlist[trackIndex].name}
                         </span>

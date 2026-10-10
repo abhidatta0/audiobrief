@@ -46,18 +46,59 @@ const handleDownload = (imageUrl: string, index: number) => {
   link.click();
   document.body.removeChild(link);
 };
+type Tab = "titles" | "thumbnails" | "descriptions";
+const TABS: { id: Tab; label: string }[] = [
+  { id: "titles", label: "Titles" },
+  { id: "thumbnails", label: "Thumbnails" },
+  { id: "descriptions", label: "Descriptions" },
+];
+
 const GeneratedOutput = ({ data }: GeneratedOutputProps) => {
+  const [activeTab, setActiveTab] = useState<Tab>("titles");
+
+  // On mobile only the active tab is shown; on md+ every section is visible
+  const sectionClass = (tab: Tab) =>
+    activeTab === tab ? "block" : "hidden md:block";
+
   return (
-    <div className=" bg-white p-8 mt-2">
-      <span className="text-xl font-semibold text-brand-400 uppercase tracking-widest">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/50 p-4 md:p-8 mt-6">
+      <span className="text-sm md:text-xl font-semibold text-brand-400 uppercase tracking-widest">
         Generated Results
       </span>
-      <div className="mx-auto space-y-12 mt-3">
-        <Titles titles={data.titles} />
 
-        <Thumbnails images={data.images} />
+      <div
+        role="tablist"
+        className="md:hidden sticky top-2 z-10 mt-3 grid grid-cols-3 gap-1 rounded-xl bg-slate-100 p-1 shadow-sm"
+      >
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`rounded-lg py-2 text-xs font-semibold transition-colors ${
+              activeTab === tab.id
+                ? "bg-white text-brand-600 shadow"
+                : "text-slate-500"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-        <Descriptions descriptions={data.descriptions} />
+      <div className="mx-auto md:space-y-12 mt-4 md:mt-3">
+        <div className={sectionClass("titles")}>
+          <Titles titles={data.titles} />
+        </div>
+
+        <div className={sectionClass("thumbnails")}>
+          <Thumbnails images={data.images} />
+        </div>
+
+        <div className={sectionClass("descriptions")}>
+          <Descriptions descriptions={data.descriptions} />
+        </div>
       </div>
     </div>
   );
@@ -85,11 +126,11 @@ const Titles = ({ titles }: TitlesListProps) => {
       variants={ANIMATION_VARIANTS.container}
       initial="hidden"
       animate="show"
-      className="space-y-4"
+      className="space-y-3 md:space-y-4"
     >
       <motion.h2
         variants={ANIMATION_VARIANTS.itemVariant}
-        className="text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-brand-600 border-b-2"
+        className="hidden md:block text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-brand-600 border-b-2"
       >
         Titles
       </motion.h2>
@@ -98,9 +139,9 @@ const Titles = ({ titles }: TitlesListProps) => {
         <motion.div
           key={index}
           variants={ANIMATION_VARIANTS.itemVariant}
-          className="group relative bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+          className="group relative bg-gray-50 rounded-lg p-3 md:p-4 hover:bg-gray-100 transition-colors"
         >
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-2 md:gap-4">
             <p className="text-gray-800 flex-1 leading-relaxed">{title}</p>
 
             <motion.button
@@ -133,16 +174,16 @@ const Thumbnails = ({ images }: ThumbnailListProps) => {
       variants={ANIMATION_VARIANTS.container}
       initial="hidden"
       animate="show"
-      className="space-y-4"
+      className="space-y-3 md:space-y-4"
     >
       <motion.h2
         variants={ANIMATION_VARIANTS.itemVariant}
-        className="text-lg font-medium text-gray-700 tracking-wide border-b-brand-600 border-b-2"
+        className="hidden md:block text-lg font-medium text-gray-700 tracking-wide border-b-brand-600 border-b-2"
       >
         Thumbnails
       </motion.h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {images.map((image, index) => (
           <motion.div
             key={index}
@@ -157,15 +198,15 @@ const Thumbnails = ({ images }: ThumbnailListProps) => {
                 className="w-full h-full object-cover"
               />
 
-              <div className="absolute inset-0 flex items-center justify-center transition-opacity md:bg-black/50 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
+              <div className="absolute bottom-2 right-2 md:inset-0 md:flex md:items-center md:justify-center transition-opacity md:bg-black/50 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleDownload(image, index)}
-                  className="bg-white rounded-full p-3 shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+                  className="bg-white/90 rounded-full p-2.5 md:p-3 shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
                   aria-label="Download thumbnail"
                 >
-                  <Download className="w-5 h-5 text-gray-800" />
+                  <Download className="w-4 h-4 md:w-5 md:h-5 text-gray-800" />
                 </motion.button>
               </div>
             </div>
@@ -206,11 +247,11 @@ const Descriptions = ({ descriptions }: DescriptionListProps) => {
       variants={ANIMATION_VARIANTS.container}
       initial="hidden"
       animate="show"
-      className="space-y-4"
+      className="space-y-3 md:space-y-4"
     >
       <motion.h2
         variants={ANIMATION_VARIANTS.itemVariant}
-        className="text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-brand-600 border-b-2"
+        className="hidden md:block text-lg font-medium text-gray-700 tracking-wide mb-6 border-b-brand-600 border-b-2"
       >
         Descriptions
       </motion.h2>
@@ -219,9 +260,9 @@ const Descriptions = ({ descriptions }: DescriptionListProps) => {
         <motion.div
           key={index}
           variants={ANIMATION_VARIANTS.itemVariant}
-          className="group relative bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+          className="group relative bg-gray-50 rounded-lg p-3 md:p-4 hover:bg-gray-100 transition-colors"
         >
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-2 md:gap-4">
             <p className="text-gray-800 flex-1 leading-relaxed">{title}</p>
 
             <motion.button
