@@ -27,20 +27,20 @@ export const generateYouTubeContent = async (
     const extension = audioFile.name.split(".").at(-1);
     const streamOfAudioOutput = await openRouterInstance.chat.send({
       chatGenerationParams: {
-        model: "openai/gpt-audio",
+        model: "google/gemini-3.1-flash-lite:nitro",
         messages: [
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: "What is in this audio?",
+                text: "Transcribe this audio verbatim.",
               },
               {
                 type: "input_audio",
                 inputAudio: {
                   data: audioBase64,
-                  format: extension ?? ".mp3",
+                  format: extension ?? "mp3",
                 },
               },
             ],
@@ -140,7 +140,7 @@ const generateTextContent = async (
   let fullResponse = "";
   const stream = await openRouterInstance.chat.send({
     chatGenerationParams: {
-      model: "google/gemini-3-flash-preview",
+      model: "google/gemini-3.1-flash-lite:nitro",
       messages: [
         {
           role: "user",
