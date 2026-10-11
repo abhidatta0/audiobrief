@@ -91,6 +91,10 @@ export default function HeroSection() {
           controls
           className="w-full max-h-150"
           controlsList="nodownload nofullscreen"
+          autoPlay
+          muted
+          playsInline
+          preload="metadata"
         >
           <source src="/audiobrief-demo.mp4" type="video/mp4" />
         </video>
