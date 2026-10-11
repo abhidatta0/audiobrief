@@ -16,6 +16,34 @@ const audioToBase64 = (file: File): Promise<string> => {
   });
 };
 
+const MIN_AUDIO_DURATION_SECONDS = 3;
+const MIN_TRANSCRIPT_WORDS = 3;
+const INVALID_AUDIO_MARKER = "INVALID_AUDIO";
+
+// Resolves to null when the browser can't read the duration, so we don't block valid files
+const getAudioDuration = (file: File): Promise<number | null> => {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const audio = new Audio();
+    audio.preload = "metadata";
+    audio.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(Number.isFinite(audio.duration) ? audio.duration : null);
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+    audio.src = url;
+  });
+};
+
+const isTranscriptInvalid = (transcript: string) => {
+  const trimmed = transcript.trim();
+  if (trimmed.includes(INVALID_AUDIO_MARKER)) return true;
+  return trimmed.split(/\s+/).filter(Boolean).length < MIN_TRANSCRIPT_WORDS;
+};
+
 export const generateYouTubeContent = async (
   audioFile: File,
   apiKey: string,
@@ -23,6 +51,14 @@ export const generateYouTubeContent = async (
 ) => {
   const openRouterInstance = getOpenRouterInstance(apiKey);
   try {
+    const duration = await getAudioDuration(audioFile);
+    if (duration !== null && duration < MIN_AUDIO_DURATION_SECONDS) {
+      toast.error(
+        `Audio is too short. Please upload at least ${MIN_AUDIO_DURATION_SECONDS} seconds of speech.`,
+      );
+      return;
+    }
+
     const audioBase64 = await audioToBase64(audioFile);
     const extension = audioFile.name.split(".").at(-1);
     const streamOfAudioOutput = await openRouterInstance.chat.send({
@@ -34,7 +70,7 @@ export const generateYouTubeContent = async (
             content: [
               {
                 type: "text",
-                text: "Transcribe this audio verbatim.",
+                text: `Transcribe this audio verbatim. If the audio does not contain clear, intelligible human speech (e.g. silence, noise, random sounds, or only music), respond with exactly "${INVALID_AUDIO_MARKER}" and nothing else.`,
               },
               {
                 type: "input_audio",
@@ -56,6 +92,13 @@ export const generateYouTubeContent = async (
       if (content) {
         audioTranscribed += content;
       }
+    }
+
+    if (isTranscriptInvalid(audioTranscribed)) {
+      toast.error(
+        "Audio isn't clear enough. Please upload a recording with clear speech.",
+      );
+      return;
     }
 
     const [textContent, image1, image2, image3] = await Promise.all([
@@ -194,7 +237,7 @@ const createTextPrompt = () => {
 
 2. Generate 3 descriptions explaining about the video
    - Reflect the tone and topic of the content
-   - Keep them atleast 150 characters when possible
+   - Keep them at least 150 characters when possible
 
 Return the response in this exact JSON structure:
 {
