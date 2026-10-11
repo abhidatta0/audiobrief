@@ -12,7 +12,7 @@ export default function Header() {
               <div className="text-3xl sm:text-xl font-extrabold bg-linear-to-br from-white to-slate-300 bg-clip-text text-transparent tracking-tight">
                 AudioBrief
               </div>
-              <div className="text-sm sm:text-xs text-slate-400 tracking-wide -mt-0.5">
+              <div className="text-sm sm:text-lg text-slate-400 tracking-wide -mt-0.5">
                 YouTube thumbnails, titles & descriptions from audio
               </div>
             </div>
