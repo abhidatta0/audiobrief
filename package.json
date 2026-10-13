@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "prepare": "husky",
     "prettier:check": "npx eslint-config-prettier eslint.config.js",
-    "format": "npx prettier --write --ignore-unknown"
+    "format": "npx prettier --write --ignore-unknown",
+    "typecheck": "tsc --noEmit",
+    "test":"echo 'testing'",
+    "verify":"pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
     "@openrouter/sdk": "^0.8.0",
@@ -47,5 +50,9 @@
       "npm run lint",
       "npm run format"
     ]
-  }
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "engineStrict": true
 }
