@@ -12,7 +12,7 @@
     "prettier:check": "npx eslint-config-prettier eslint.config.js",
     "format": "npx prettier --write --ignore-unknown",
     "typecheck": "tsc --noEmit",
-    "test":"echo 'testing'",
+    "test":"exit 1",
     "verify":"pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
