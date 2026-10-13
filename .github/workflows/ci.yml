@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install pnpm, Node.js, and Setup Cache
-        uses: pnpm/setup@v4
+        uses: pnpm/action-setup@v4
         with:
           # Runtime syntax targets the Node version
           runtime: node@24
