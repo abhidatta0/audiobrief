@@ -1,4 +1,4 @@
 allowBuilds:
-  '@openrouter/sdk': false
+  '@openrouter/sdk': true
 ignoredBuiltDependencies:
   - esbuild
