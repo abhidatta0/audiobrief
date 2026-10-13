@@ -55,5 +55,5 @@
     "node": "24.x"
   },
   "engineStrict": true,
-  "packageManager": "pnpm@10.24.0"
+  "packageManager": "pnpm@11.0.0"
 }
