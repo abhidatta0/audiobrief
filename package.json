@@ -12,8 +12,9 @@
     "prettier:check": "npx eslint-config-prettier eslint.config.js",
     "format": "npx prettier --write --ignore-unknown",
     "typecheck": "tsc --noEmit",
-    "test": "echo 'testing'",
-    "verify": "pnpm typecheck && pnpm test && pnpm build"
+    "test:ui": "pnpm exec playwright test --ui",
+    "test:ci": "pnpm exec playwright test",
+    "verify": "pnpm typecheck && pnpm test:ci && pnpm build"
   },
   "dependencies": {
     "@openrouter/sdk": "^0.8.0",
