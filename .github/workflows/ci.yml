@@ -25,13 +25,15 @@ jobs:
         id: node-version
         run: echo "node_version=$(jq -r '.engines.node' package.json)" >> $GITHUB_OUTPUT
 
-      - name: Install pnpm, Node.js, and Setup Cache
+      - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          # Installs Node.js from package.json engines
-          version: ${{ steps.node-version.outputs.node_version }}
-          # Enables automatic global store caching
-          cache: true
+          version: 11
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
 
       - name: Install dependencies
         run:  pnpm install --frozen-lockfile
