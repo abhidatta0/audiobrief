@@ -21,11 +21,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
+      - name: Get Node.js version from package.json engines
+        id: node-version
+        run: echo "node_version=$(jq -r '.engines.node' package.json)" >> $GITHUB_OUTPUT
+
       - name: Install pnpm, Node.js, and Setup Cache
         uses: pnpm/action-setup@v4
         with:
-          # Runtime syntax targets the Node version
-          runtime: node@24
+          # Installs Node.js from package.json engines
+          version: ${{ steps.node-version.outputs.node_version }}
           # Enables automatic global store caching
           cache: true
 
@@ -33,7 +37,7 @@ jobs:
         run:  pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm exec playwright install chromium
 
       - name: Verify application
         run: pnpm verify
