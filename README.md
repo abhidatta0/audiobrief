@@ -26,14 +26,6 @@ AudioBrief generates:
 2. **Thumbnail**: High-resolution image ready for upload
 3. **Metadata**: Additional insights about your content
 
-
-## Supported Audio Formats
-
-- MP3
-- WAV
-- OGG
-- AAC
-
 ## API Rate Limits
 AudioBrief uses your OpenRouter API key, which may have rate limits depending on your plan. The tool automatically handles rate limiting and retries.
 
